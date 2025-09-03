@@ -10,6 +10,7 @@ public class RodCut {
         System.out.println(findMaxRevenue(new int[]{1,5,8,9,10,17, 17, 20, 24, 30}, 5));
         System.out.println(findMaxRevenue(new int[]{1,5,8,9,10,17, 17, 20, 24, 30}, 8));
         System.out.println(findMaxRevenueWMem(new int[]{1,5,8,9,10,17, 17, 20, 24, 30}, 5, new HashMap<>()));
+        System.out.println(findMaxRevenueWTab(new int[]{1,5,8,9,10,17, 17, 20, 24, 30}, 5));
     }
 
     private static int findMaxRevenue(int[] prices, int rodLength) {
@@ -41,5 +42,17 @@ public class RodCut {
             maxRevenue = Integer.max(maxRevenue, prices[i-1] + findMaxRevenue(prices, rodLength - i));
         }
         return maxRevenue;
+    }
+
+    private static int findMaxRevenueWTab(int[] prices, int rodLength) {
+        int[] revenueStore = new int[rodLength + 1];
+        for (int currLen = 1; currLen <= rodLength; currLen++) {
+           int currLenMaxRevenue = Integer.MIN_VALUE;
+           for (int cutAt = 1; cutAt <= currLen; cutAt++) {
+               currLenMaxRevenue = Integer.max(currLenMaxRevenue, prices[currLen - cutAt] + revenueStore[cutAt - 1]);
+           }
+           revenueStore[currLen] = currLenMaxRevenue;
+        }
+        return revenueStore[rodLength];
     }
 }
